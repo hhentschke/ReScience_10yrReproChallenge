@@ -1,0 +1,1 @@
+warndlg('manExtract3c does not exist anymore: use Rdeal01 (=same routine, different name)');
