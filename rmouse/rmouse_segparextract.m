@@ -75,14 +75,14 @@ for i=1:length(r)
             'thCCPosPeakDecay',...
             'gaePPeak','gaePPeakT',...
             'gaeThPEMn','gaeThNarrowPEMn'}
-          if length(diag(y))>=1
+          if length(celldiag(y))>=1
             y=y{AP.LFPpcInd2,AP.LFPpcInd2};
           else
             y=[];
           end
         % all whose cross-measures shall be plotted
         otherwise
-          if length(diag(y))>=1
+          if length(celldiag(y))>=1
             % y=y{ccRefChIdx,AP.LFPpcInd2};
             y=y{ccRefChInd,AP.LFPpcInd2};
           else

@@ -178,7 +178,9 @@ function etsl=sspulse2tsl(d,trigThresh,si,mfac,tag,trigTauPts)
 % the task of negative-going pulses and negative thresholds can be dealt
 % with without change of code. !NOTE: mfac*trigThresh MUST BE SORTED IN
 % ASCENDING ORDER!
-global DS etslc
+global DS
+etslconst;
+
 if mfac ~=1.0
   d=d*mfac;
   trigThresh=trigThresh*mfac;

@@ -78,7 +78,7 @@ if ~isempty(masterAP)
   end
 end
 
-  
+tic  
 % ------ set up a few essential 'working parameters'
 rmouse_ini;
 
@@ -495,7 +495,7 @@ while ~done
       combo_etsl=[r_etsl; i_etsl; etsl];
       % commmand below does not work with fake last triggers in etsl
       [uet,tmp1]=unique(combo_etsl(:,etslc.tagCol));
-      lh=legend(ph(tmp1),AP.segmentType(combo_etsl(tmp1,etslc.tagCol),1),4);
+      lh=legend(ph(tmp1),AP.segmentType(combo_etsl(tmp1,etslc.tagCol),1));
       set(lh,'position',[.91 .85 .07 .125]);
       % --- pie chart
       ep=unique(etsl(:,etslc.tagCol));
@@ -1182,24 +1182,11 @@ while ~done
   end
   done=isempty(AP.job);
 end
-
+t = toc;
 % last act: close logfile
-logstr={['********** analysis end: ' datestr(now)]};
+logstr={['********** analysis end: ' datestr(now) ', analysis took ' num2str(t) ' seconds']};
 disp(logstr{end});
 diary off
 
 % global variables must NOT BE DELETED! 
 WP=[]; DS=[]; AP=[];
-
-
-
-
-% ------------- trash ------------- trash ------------- trash ------------- trash 
-% to convert from min.sec to ms: b=floor(a)*60000+(a-floor(a))*1e5
-% to convert from ms to min.sec: a=floor(b/60000)+(b/60000-floor(b/60000))*.6;
-% % display string and append it to text file
-% function logb(fn,s)
-% disp(s);
-% fid=fopen(fn,'at');
-% fprintf(fid,'%s \n',s);
-% fclose(fid);

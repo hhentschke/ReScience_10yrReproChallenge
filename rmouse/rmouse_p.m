@@ -58,7 +58,8 @@ if isfield(r,'rawPMn')
   % -- exploring, all electrodes
   subplot('position',[.33-.33/2+xmarg .8/3*2+ymarg .33/2-2*xmarg .8/3-2*ymarg]);
   hold on
-  if length(diag(r(explV).rawPMn))>=LFPpcInd2 && ~isempty(r(explV).rawPMn{LFPpcInd2,LFPpcInd2})
+  % if length(diag(r(explV).rawPMn))>=LFPpcInd2 && ~isempty(r(explV).rawPMn{LFPpcInd2,LFPpcInd2}) % original
+  if length(celldiag(r(explV).rawPMn))>=LFPpcInd2 && ~isempty(r(explV).rawPMn{LFPpcInd2,LFPpcInd2})
     % plot from 1 to 180 Hz
     frix=r(1).F>=1 & r(1).F<=180;
     % extract spectra, omitting non analyzed channels (nans)
@@ -87,7 +88,8 @@ if isfield(r,'rawPMn')
   subplot('position',[.33-.33/2+xmarg .8/3*1+ymarg .33/2-2*xmarg .8/3-2*ymarg]);
   hold on
   for i=bpix
-    if length(diag(r(i).rawPMn))>=LFPpcInd2 && ~isempty(r(i).rawPMn{LFPpcInd2,LFPpcInd2})
+    % if length(diag(r(i).rawPMn))>=LFPpcInd2 && ~isempty(r(i).rawPMn{LFPpcInd2,LFPpcInd2}) % original
+    if length(celldiag(r(i).rawPMn))>=LFPpcInd2 && ~isempty(r(i).rawPMn{LFPpcInd2,LFPpcInd2})
       pcol=AP.segmentType{i,3};
       frix=r(1).F>=1 & r(1).F<=180;
       ph=plot(r(1).F(frix),r(i).rawPMn{LFPpcInd2,LFPpcInd2}(frix));
@@ -110,7 +112,7 @@ if isfield(r,'gaePMn')
   % -- exploring, all electrodes
   subplot('position',[.33-.33/2+xmarg .8/3*0+ymarg .33/2-2*xmarg .8/3-2*ymarg]);
   hold on
-  if length(diag(r(explV).gaePMn))>=1
+  if length(celldiag(r(explV).gaePMn))>=1
     % gammaEnv psd has restricted freq range and doesnt make much sense 
     % above 20 Hz anyways
     frix=r(1).gaeF>=2 & r(1).gaeF<=20;
@@ -163,7 +165,7 @@ for sigi=1:5
     hold on
     for i=bpix
       % assume that if theta power exists power has also been calculated in other bands
-      if length(diag(r(i).rawThNarrowPEMn))>=1
+      if length(celldiag(r(i).rawThNarrowPEMn))>=1
         % more handy constants..
         pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
         eval(['tmpMn=cat(2,r(i).' fifi '{AP.dixie});']);
@@ -227,7 +229,7 @@ for sigi=1:5
     hold on
     for i=bpix
       % assume that if theta ceherence exists it has also been calculated in other bands
-      if length(diag(r(i).rawCohMnThNarrow))>=1
+      if length(celldiag(r(i).rawCohMnThNarrow))>=1
         % more handy constants..
         pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
         
@@ -265,7 +267,7 @@ if isfield(r,'rawPPeakTMn')
   subplot('position',[.66+xmarg .8/4*3+ymarg .33/2-2*xmarg .8/4-2*ymarg]);
   hold on
   for i=bpix
-    if length(diag(r(i).rawPPeakTMn))>=1
+    if length(celldiag(r(i).rawPPeakTMn))>=1
       % more handy constants..
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       % nans will be ignored on plot
@@ -298,7 +300,7 @@ if isfield(r,'rawPPeakMn')
   subplot('position',[.66+.33/2+xmarg .8/4*3+ymarg .33/2-2*xmarg .8/4-2*ymarg]);
   hold on
   for i=bpix
-    if length(diag(r(i).rawPPeakMn))>=1
+    if length(celldiag(r(i).rawPPeakMn))>=1
       % more handy constants..
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       % nans will be ignored on plot
@@ -337,7 +339,7 @@ if isfield(r,'rawPSEFMn')
   subplot('position',[.66+xmarg .8/4*2+ymarg .33/2-2*xmarg .8/4-2*ymarg]);
   hold on
   for i=bpix
-    if length(diag(r(i).rawPSEFMn))>=1
+    if length(celldiag(r(i).rawPSEFMn))>=1
       % more handy constants..
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       % nans will be ignored on plot
@@ -374,7 +376,7 @@ if isfield(r,'rawGaCentroidMn')
   subplot('position',[.66+.33/2+xmarg .8/4*2+ymarg .33/2-2*xmarg .8/4-2*ymarg]);
   hold on
   for i=bpix
-    if length(diag(r(i).rawGaCentroidMn))>=1
+    if length(celldiag(r(i).rawGaCentroidMn))>=1
       % more handy constants..
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       % nans will be ignored on plot
@@ -523,7 +525,8 @@ if isfield(r,'thCCMn')
   lct=lct+1;
   hold on
   for i=bpix
-    if length(diag(r(i).thCCMn))>=LFPpcInd2 && ~isempty(r(i).thCCMn{LFPpcInd2,LFPpcInd2})
+    % if length(diag(r(i).thCCMn))>=LFPpcInd2 && ~isempty(r(i).thCCMn{LFPpcInd2,LFPpcInd2}) % original
+    if length(celldiag(r(i).thCCMn))>=LFPpcInd2 && ~isempty(r(i).thCCMn{LFPpcInd2,LFPpcInd2}) 
       % more handy constants..
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       % extract CC data for principal channel: non analyzed channels
@@ -558,7 +561,7 @@ if isfield(r,'thCCMn')
   sph=subplot('position',[xpos(lct) ypos(row) xlen ylen]);
   hold on
   for i=bpix
-    if length(diag(r(i).thCCMn))>=LFPpcInd2 && ~isempty(r(i).thCCMn{LFPpcInd2,LFPpcInd2})
+    if length(celldiag(r(i).thCCMn))>=LFPpcInd2 && ~isempty(r(i).thCCMn{LFPpcInd2,LFPpcInd2})
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       tmpMn=cat(1, r(i).thCCPeakTMn{1:LFPpcInd2,LFPpcInd2});
       % symmetry - don't forget to invert
@@ -589,7 +592,7 @@ if isfield(r,'thCCMn')
   sph=subplot('position',[xpos(lct) ypos(row) xlen ylen]);
   hold on
   for i=bpix
-    if length(diag(r(i).thCCMn))>=LFPpcInd2 && ~isempty(r(i).thCCMn{LFPpcInd2,LFPpcInd2})
+    if length(celldiag(r(i).thCCMn))>=LFPpcInd2 && ~isempty(r(i).thCCMn{LFPpcInd2,LFPpcInd2})
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       tmpMn=cat(1, r(i).thCCPosPeakDecayMn{AP.dixie});
       tmpStd=cat(1, r(i).thCCPosPeakDecayStd{AP.dixie});
@@ -734,7 +737,7 @@ if isfield(r,'gaCCMn')
   lct=lct+1;
   hold on
   for i=bpix
-    if length(diag(r(i).gaCCMn))>=LFPpcInd2 && ~isempty(r(i).gaCCMn{LFPpcInd2,LFPpcInd2})
+    if length(celldiag(r(i).gaCCMn))>=LFPpcInd2 && ~isempty(r(i).gaCCMn{LFPpcInd2,LFPpcInd2})
       % more handy constants..
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       % extract CC data for principal channel: non analyzed channels
@@ -769,7 +772,7 @@ if isfield(r,'gaCCMn')
   sph=subplot('position',[xpos(lct) ypos(row) xlen ylen]);
   hold on
   for i=bpix
-    if length(diag(r(i).gaCCMn))>=LFPpcInd2 && ~isempty(r(i).gaCCMn{LFPpcInd2,LFPpcInd2})
+    if length(celldiag(r(i).gaCCMn))>=LFPpcInd2 && ~isempty(r(i).gaCCMn{LFPpcInd2,LFPpcInd2})
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       tmpMn=cat(1, r(i).gaCCPeakTMn{1:LFPpcInd2,LFPpcInd2});
       % symmetry - don't forget to invert
@@ -804,7 +807,7 @@ if isfield(r,'gaeCCMn')
   sph=subplot('position',[xpos(lct) ypos(row) xlen ylen]);
   hold on
   for i=bpix
-    if length(diag(r(i).gaeCCMn))>=LFPpcInd2 && ~isempty(r(i).gaeCCMn{LFPpcInd2,LFPpcInd2})
+    if length(celldiag(r(i).gaeCCMn))>=LFPpcInd2 && ~isempty(r(i).gaeCCMn{LFPpcInd2,LFPpcInd2})
       % more handy constants..
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       % extract CC data for principal channel: non analyzed channels
@@ -840,7 +843,7 @@ if isfield(r,'gaeCCMn')
   sph=subplot('position',[xpos(lct) ypos(row) xlen ylen]);
   hold on
   for i=bpix
-    if length(diag(r(i).gaeCCMn))>=LFPpcInd2 && ~isempty(r(i).gaeCCMn{LFPpcInd2,LFPpcInd2})
+    if length(celldiag(r(i).gaeCCMn))>=LFPpcInd2 && ~isempty(r(i).gaeCCMn{LFPpcInd2,LFPpcInd2})
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       tmpMn=cat(1, r(i).gaeCCPeakTMn{1:LFPpcInd2,LFPpcInd2});
       % symmetry - don't forget to invert
@@ -875,7 +878,7 @@ if isfield(r,'thHieCCMn')
   sph=subplot('position',[xpos(lct) ypos(row) xlen ylen]);
   hold on
   for i=bpix
-    if length(diag(r(i).thHieCCMn))>=LFPpcInd2 && ~isempty(r(i).thHieCCMn{LFPpcInd2,LFPpcInd2})
+    if length(celldiag(r(i).thHieCCMn))>=LFPpcInd2 && ~isempty(r(i).thHieCCMn{LFPpcInd2,LFPpcInd2})
       % more handy constants..
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       % extract CC data for principal channel: non analyzed channels
@@ -911,7 +914,7 @@ if isfield(r,'thHieCCMn')
   sph=subplot('position',[xpos(lct) ypos(row) xlen ylen]);
   hold on
   for i=bpix
-    if length(diag(r(i).thHieCCMn))>=LFPpcInd2 && ~isempty(r(i).thHieCCMn{LFPpcInd2,LFPpcInd2})
+    if length(celldiag(r(i).thHieCCMn))>=LFPpcInd2 && ~isempty(r(i).thHieCCMn{LFPpcInd2,LFPpcInd2})
       pcol=AP.segmentType{i,3}; psym=AP.segmentType{i,4};
       tmpMn=cat(1, r(i).thHieCCPeakTMn{1:LFPpcInd2,LFPpcInd2});
       % symmetry - don't forget to invert
@@ -1255,7 +1258,7 @@ if spec_contourP
       hold on
       for i=bpix
         % these plots make sense only if the number of channels >2
-        if length(diag(r(i).rawCohMn))>1
+        if length(celldiag(r(i).rawCohMn))>1
           % large range (0-100 Hz)
           frix=find(r(1).F>=0 & r(1).F<=100);
           % around theta
@@ -1374,7 +1377,7 @@ if cc_contourP
     ccp=discrete2cont(cci-AP.ccLagPts,WP.osi*.001,'intv',0);
     hold on
     for i=bpix
-      if length(diag(r(i).thCCMn))>1
+      if length(celldiag(r(i).thCCMn))>1
         sph=subplot('position',[xpos(lct) ypos(row) xlen ylen]);
         lct=lct+1;
         srfc=repmat(nan,length(cci),nAllLFPCh);
@@ -1483,7 +1486,7 @@ if cc_contourP
     ccp=discrete2cont(cci-AP.ccLagPts,WP.osi*.001,'intv',0);
     hold on
     for i=bpix
-      if length(diag(r(i).gaCCMn))>1
+      if length(celldiag(r(i).gaCCMn))>1
         sph=subplot('position',[xpos(lct) ypos(row) xlen ylen]);
         lct=lct+1;
         srfc=repmat(nan,length(cci),nAllLFPCh);
@@ -1544,7 +1547,7 @@ if cc_contourP
     ccp=discrete2cont(cci-AP.ccLagPts,WP.osi*.001,'intv',0);
     hold on
     for i=bpix
-      if length(diag(r(i).gaeCCMn))>1
+      if length(celldiag(r(i).gaeCCMn))>1
         sph=subplot('position',[xpos(lct) ypos(row) xlen ylen]);
         lct=lct+1;
         srfc=repmat(nan,length(cci),nAllLFPCh);
@@ -1605,7 +1608,7 @@ if cc_contourP
     ccp=discrete2cont(cci-AP.ccLagPts,WP.osi*.001,'intv',0);
     hold on
     for i=bpix
-      if length(diag(r(i).thHieCCMn))>1 
+      if length(celldiag(r(i).thHieCCMn))>1 
         sph=subplot('position',[xpos(lct) ypos(row) xlen ylen]);
         lct=lct+1;
         srfc=repmat(nan,length(cci),nAllLFPCh);
@@ -1756,7 +1759,7 @@ for sti=1:nRows
   if isfield(r,[STshort 'CCMn'])
     for i=bpix
       ict=ict+1;
-      eval(['cm1=diag(r(i).' STshort 'CCMn);']);
+      eval(['cm1=celldiag(r(i).' STshort 'CCMn);']);
       if length(cm1)>=LFPpcInd2 && ~isempty(cm1{LFPpcInd2})
         eval(['cm1=r(i).' STshort 'CCPeakMn;']);
         eval(['cm2=r(i).' STshort 'CCPeakTMn;']);

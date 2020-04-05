@@ -1,4 +1,7 @@
-function [ft_,fo_,st_,ds1ix,ds2ix,ds12ix]=curvefit2rmousepar(ds1,ds2,ds12,rv)
+function [funH, fitParNames, beta, ds1ix, ds2ix, ds12ix]=fit2rmousepar(ds1, ds2, ds12, rv)
+% fit2rmousepar has been added in April 2020 for the then years
+% reproducibility challenge, the major difference being that it works
+% without the curve fitting toolbox.
 
 switch rv
 
@@ -261,41 +264,13 @@ switch rv
     ds1ix=find(ds1(:,1)>-inf);
     ds2ix=find(ds2(:,1)>-inf);
     ds12ix=find(ds12(:,1)>-inf);
-    if 0
-      % REALLY OLD: sum of two gaussians + offset
-      ft_ = fittype('a1*exp(-b1*(x)^2) + a2*exp(-b2*(x-c2)^2)' ,...
-        'dependent',{'y'},'independent',{'x'},...
-        'coefficients',{'a1','b1','a2','b2','c2'});
-      fo_ = fitoptions('method','NonlinearLeastSquares');
-      % starting values for parameters
-      st_ = [.2 40 .15 4 .6 ];
-    elseif 0
-      % negative gaussian + offset
-      ft_ = fittype('a1*exp(-b1*(x-c1)^2)+o' ,...
-        'dependent',{'y'},'independent',{'x'},...
-        'coefficients',{'a1','b1','c1','o'});
-      fo_ = fitoptions('method','NonlinearLeastSquares');
-      % starting values for parameters
-      st_ = [-.2 50 .3 .6 ];
-    elseif 1
-      % second-order polynomial
-      ft_ = fittype('a + b*x + c*(x*x)' ,...
-        'dependent',{'y'},'independent',{'x'},...
-        'coefficients',{'a','b','c'});
-      fo_ = fitoptions('method','NonlinearLeastSquares');
-      % starting values for parameters
-      st_ = [.15 -.3 1];
-    else
-      % third-order polynomial
-      ft_ = fittype('a + b*x + c*(x*x) +d*(x*x*x)' ,...
-        'dependent',{'y'},'independent',{'x'},...
-        'coefficients',{'a','b','c','d'});
-      fo_ = fitoptions('method','NonlinearLeastSquares');
-      % starting values for parameters
-      st_ = [.15 -.3 1 .01];
-
-    end
-
+    
+    funH = @(par, x) par(1) + par(2)*x + par(3)*x.^2;
+    % parameter names
+    fitParNames = ["poly0", "poly1", "poly2"];
+    % starting values for parameters
+    beta = [0.15, -.3, 1];
+    
   case {'thgaeCCZScore'}
     % including data for x=0 makes sense for this CC parameter
     ds1ix=find(ds1(:,1)>-inf);
@@ -309,7 +284,7 @@ switch rv
       fo_ = fitoptions('method','NonlinearLeastSquares');
       % starting values for parameters
       st_ = [.2 40 .15 4 .6 ];
-  else
+    else
       % second-order polynomial
       ft_ = fittype('a + b*x + c*(x*x)' ,...
         'dependent',{'y'},'independent',{'x'},...
@@ -547,21 +522,3 @@ switch rv
     warning(['no fit specially designed for ' rv ' - employing linear fit']);
 end % switch
 
-% archive
-
-% model used until dec 2005
-%   case {'thgaeCCPeakTMn'}
-%     % including data for x=0 does make sense for this particular CC!
-%     ds1ix=find(ds1(:,1)>=-inf);
-%     ds2ix=find(ds2(:,1)>=-inf);
-%     ds12ix=find(ds12(:,1)>=-inf);
-%     % logistic type with offset and shifted on x-axis
-%     ft_ = fittype('a/(1 + exp(-b*(x+d)))+o' ,...
-%       'dependent',{'y'},'independent',{'x'},...
-%       'coefficients',{'a','b','d','o'});
-%     % fo_ = fitoptions('method','NonlinearLeastSquares',...
-%     %  'Lower',[.0001 .0001 -50 -50],'Upper',[1000 100 50 100]);
-%     fo_ = fitoptions('method','NonlinearLeastSquares');
-%     % starting values for parameters - potentially sensitive!
-%     st_ = [50 25 -.4 -10];
-% 

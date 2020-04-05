@@ -67,6 +67,9 @@ elseif exist('c:\lv_dual','file'),
 elseif strcmpi(getenv('computername'),'hh64')
   WP.maxRAM=2000;
   WP.rootPath='d:\rmouse';
+elseif strcmpi(getenv('computername'),'HH-I7')
+  WP.maxRAM=20000;
+  WP.rootPath='d:\_data\rmouse\ten-years';
 else 
   error('root path is undefined (see rmouse_ini.m)');  
 end

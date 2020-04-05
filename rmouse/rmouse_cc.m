@@ -311,7 +311,8 @@ for i=1:length(r)
       elseif ~isDefinedExpLag
         expLagDiag=diag(expLag,ki-1);
         % extract diagonal of matrix of averaged CC and cut down
-        tmpdd=diag(cccMn,ki-1);
+        % tmpdd=diag(cccMn,ki-1); %original
+        tmpdd = celldiag(cccMn, ki-1);
         tmpdd=cat(2,tmpdd{:});
         tmpdd=tmpdd(cci,:);
         % determine all peaks and, for the very very rare cases of no peak, max 
