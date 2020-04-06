@@ -1,9 +1,13 @@
-function ccp01(varargin)
+function plot_crosscorr_function(varargin)
 % generates plots of crosscorrelation functions: 
-% - thgaeCC in fig. 4
-% - thCC in fig. 2 
+% - thgaeCC in fig. 4 (original paper)
+% - thCC in fig. 2 (original paper)
 % expects r as variable input arg
-global DS AP
+global DS AP WP
+
+% script root path 
+script_root_path = "d:\hh\projects_programming\ten-years\ReScience_10yrReproChallenge\scripts_data";
+
 
 if nargin>0
   r=varargin{1};
@@ -29,15 +33,15 @@ labelscale('fontSz',8,'scaleFac',.25,'lineW',1.5,'markSz',8);
 ornt='portrait';
 figdir='d:\projects\rmouse\paper_atropine\rawFig\';
 printas='-dpsc2';
-% printas=[];
+printas=[];
 
 figName=mfilename;
 
 % --- paths, channels
 rmouse_ini;
 cd([WP.rootPath '\beta3_wtko\wt0001_04708']);
-a001_r1;
-rmouse_APcheck;
+run(fullfile(script_root_path, "wt0001_04708", "a001_exc1.m"));
+rmouse_apcheck;
 rawCh=rmouse_chan;
 % locate desired channels within results structure
 for i=1:nChans
