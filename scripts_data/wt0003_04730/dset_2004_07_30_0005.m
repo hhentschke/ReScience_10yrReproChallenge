@@ -13,6 +13,9 @@ DS.conc=                       50;
 DS.dpath=                      '\beta3_wtko\wt0003_04730';
 % neuronal signals: abf file name without extension
 DS.abfFn=                      '2004-07-30 0005';    
+% some recording hardware (notably the Neuralynx) inverts signals by default.
+% set this parameter to a nonzero value if that is the case
+DS.rawSignalInverted=          1;
 % Comments
 DS.comment=                    ' ';
 % information about the NEURAL raw data channels that are OK in terms of data integrity: 

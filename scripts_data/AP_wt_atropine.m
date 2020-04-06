@@ -19,7 +19,6 @@ AP.trigTau=                  20;
 AP.strm={...
   'sansDelta',...
   'theta',...
-  'thetaEnv',...
   'gamma',...
   'gammaEnv',...
   'gammaNarrow',...
@@ -30,22 +29,22 @@ AP.strm={...
 % ------ definition of frequency bands (Hz)
 AP.sansDelta=                  [4 400];
 AP.delta=                      [1 4];
-AP.theta=                      [5 12];
+AP.theta=                      [4 12];
 AP.thetaLo=                    [4 6];
-AP.thetaHi=                    [6 12];
+AP.thetaHi=                    [8 11];
 AP.beta=                       [15 30];
-AP.gamma=                      [40 90];
+AP.gamma=                      [30 90];
 AP.gammaNarrow=                [65 90];
 AP.ripple=                     [120 180];
 
 % ------ cutoff frequencies for butterworth bandpass filters
 AP.sansDeltaCFreq=             [4 400];
 AP.deltaCFreq=                 [1 3.5];
-AP.thetaCFreq=                 [5 12];
+AP.thetaCFreq=                 [4 12];
 AP.thetaLoCFreq=               [4 6];
-AP.thetaHiCFreq=               [6 12];
+AP.thetaHiCFreq=               [8 11];
 AP.betaCFreq=                  [15 30];
-AP.gammaCFreq=                 [40 90];
+AP.gammaCFreq=                 [30 90];
 AP.gammaNarrowCFreq=           [65 90];
 AP.rippleCFreq=                [130 170];
 

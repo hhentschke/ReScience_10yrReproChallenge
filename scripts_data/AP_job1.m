@@ -39,10 +39,27 @@ AP.job={...
 AP.job={...
   'det_artifacts',...       % detect artifacts in neural signals & generate time stamp list thereof
   'gen_btsl',...            % generate behavioral time stamp list
-  'filter&hilbert',...      % generate the various streams (theta, gamma, etc.)
+  'gen_avDiff',...          % generate a stream (essentially, slopes averaged across channels) useful for detetction of epileptiform activity
   'thetaPeaks',...          % compute amplitude & time of occurrence of peaks in theta stream
-  'seg_thetaPeakReg',...    % compute theta regularity based on variance of peak amplitude and inter-peak interval  
+  'gammaEnvPeaks',...       % compute amplitude & time of occurrence of peaks in gammaEnv stream  
+  'specgram',...            % compute & plot spectrogram (time course of spectral power)
+  'seg_thetaPeakReg',...    % compute theta regularity based on variance of peak amplitude and inter-peak interval
+  'seg_gammaEnvPeakReg',... % compute gammaEnv regularity based on variance of peak amplitude and inter-peak interval
+  'seg_rawSpecPow',...      % compute spectra & derived parameters (all combinations of channels)
+  'seg_gammaEnvSpecPow',... % compute spectra & derived parameters for gamma envelope (all combinations of channels)  
+  'seg_gammaNarrowEnvSpecPow',... % compute spectra & derived parameters for narrow gamma envelope (all combinations of channels)  
+  'seg_thetaCC',...         % compute theta crosscorrelations (all combinations of channels)
+  'seg_gammaCC',...         % compute gamma crosscorrelations (all combinations of channels)
+  'seg_gammaEnvCC',...      % compute gamma envelope crosscorrelations (all combinations of channels)
+  'seg_gammaNarrowCC',...   % compute gamma narrow crosscorrelations (all combinations of channels)
+  'seg_gammaNarrowEnvCC',...% compute gamma narrow envelope crosscorrelations (all combinations of channels)
+  'seg_thetaGammaEnvCC',... % compute crosscorrelations between theta and gamma envelope (for each channel)
+  'seg_rawGammaEnvCoh',...  % compute coherence between raw signal and gamma envelope (all combinations of channels)
+  'seg_cc_ms2rad',...       % convert theta-related phase lags from ms to radians, creating new results fields (NOTE: will be called automatically if any of 'seg_rawSpecPow','seg_thetaCC','seg_gammaEnvCC','seg_thetaGammaEnvCC' is called)
+  'sumFig',...              % produce summary plots
 };
+
+
 
 % determines how to deal with previously computed results of the 'seg_' jobs:
 % 'replace' means they will be discarded entirely and replaced by the results 
@@ -64,4 +81,4 @@ AP.printas=                  [];
 % computing the CC between theta and phase-shuffled versions of the gamma envelope.
 % The parameter below specifies on how many shuffled versions of gammaEnv this
 % evaluation should be based. Set to zero to skip shuffling.
-AP.ccNShuffle=                  0;   
+AP.ccNShuffle=                  100;   
