@@ -1,6 +1,6 @@
 function rdeal(rfn,idv,job,varargin)
 % ** function rdeal(rfn,idv,job,varargin)
-%
+% Deal with results from 
 %                         >>> INPUT VARIABLES >>>
 %
 % NAME           TYPE/DEFAULT          DESCRIPTION
@@ -16,6 +16,7 @@ function rdeal(rfn,idv,job,varargin)
 %   'rm_anova2'       - 2-way ANOVA with repeated measures (both factors r.m.)
 %   'anovan'          - n-way ANOVA
 %   'curveFit_FTest'  - F-test of fitted curves
+%   'effect_size'     - compute measure of effect size
 % 
 % curRv          cell array, {'all'}   results variables to be treated
 % plotStyle      char array, 'barhh'   'barhh', 'symb', 'subjects' or 'none'
@@ -46,11 +47,15 @@ projSubDir='';
 printas=[];
 pvpmod(varargin);
 
-export=0;
+export = false;
+doLegend = false;
 
 curFigPath=['\' projSubDir '\figures'];
 close all;
 exportFn=['\' projSubDir '\' mfilename '_export.txt'];
+
+% options for function fitnlm
+options = statset('MaxIter', 400, 'FunValCheck', 'on');
 
 % load data 
 rmouse_ini;
@@ -61,7 +66,7 @@ if isequal(curRv,{'all'})
   curRv=rv;
   rvix=1:length(rv);
 else
-  [nada,rvix]=intersect(rv,curRv);
+  [~,rvix]=intersect(rv,curRv);
   rvix=sort(rvix);
   if ~isempty(setdiff(curRv,rv))
     warndlg('some rv illegal (forgot to append ''_auto or'' ''_cross''?');
@@ -468,7 +473,6 @@ for rvi=rvix
                 [ds1]=regroup(ds1);
                 [ds2]=regroup(ds2);
                 [es,ci]=effectsize(ds1,ds2,'type','hedgesd');
-                % [es,ci]=effectsize(ds1,ds2,'type','hedgesd','nboot',5000);
                 % put into columns: es, ci(1), ci(2)
                 esArr=cat(3,esArr,[es' ci']);
                 
@@ -482,76 +486,87 @@ for rvi=rvix
                 ds1(:,1)=ds1(:,1)*-1;
                 ds2(:,1)=ds2(:,1)*-1;
                 ds12(:,1)=ds12(:,1)*-1;
+
                 % --- part 2: depending on parameter transform data and set up model
                 tmpRv=rv{rvi}(1:strfind(rv{rvi},'_')-1);
-                [ft_,fo_,st_,ds1ix,ds2ix,ds12ix]=curvefit2rmousepar(ds1,ds2,ds12,tmpRv);
+                
+                % [ft_,fo_,st_,ds1ix,ds2ix,ds12ix]=curvefit2rmousepar(ds1,ds2,ds12,tmpRv);
+                [funH, fitParNames, beta, ds1ix, ds2ix, ds12ix]=fit2rmousepar(ds1, ds2, ds12, tmpRv);
 
                 % --- part 3: fit and put in fitArr
-                set(fo_,'Startpoint',st_);
-                [ds1f,gof1]=fit(ds1(ds1ix,1),ds1(ds1ix,2),ft_ ,fo_);
-                [ds2f,gof2]=fit(ds2(ds2ix,1),ds2(ds2ix,2),ft_ ,fo_);
-                [ds12f,gof12]=fit(ds12(ds12ix,1),ds12(ds12ix,2),ft_ ,fo_);
+                %                 set(fo_,'Startpoint',st_);
+                %                 [ds1f,gof1]=fit(ds1(ds1ix,1),ds1(ds1ix,2),ft_ ,fo_);
+                %                 [ds2f,gof2]=fit(ds2(ds2ix,1),ds2(ds2ix,2),ft_ ,fo_);
+                %                 [ds12f,gof12]=fit(ds12(ds12ix,1),ds12(ds12ix,2),ft_ ,fo_);
 
+                
+                [fitPar1, stats1] = fitnlm_e(ds1(ds1ix,1), ds1(ds1ix,2), funH, beta, options);
+                [fitPar2, stats2] = fitnlm_e(ds2(ds2ix,1), ds2(ds2ix,2), funH, beta, options);
+                [fitPar12, stats12] = fitnlm_e(ds12(ds12ix,1), ds12(ds12ix,2), funH, beta, options);
+                
+                
                 % fill columns
-                fitArr(nsi,1)={ds1f};
-                fitArr(nsi,2)={ds2f};
+                %                 fitArr(nsi,1)={ds1f};
+                %                 fitArr(nsi,2)={ds2f};
+                fitArr(nsi,1)={@(x) funH(fitPar1, x)};
+                fitArr(nsi,2)={@(x) funH(fitPar2, x)};
 
-                % --- part 4: create curves representing the fits & plot
-                % 1. all data pts & fit
-                fitx=ds12(1,1):(ds12(end,1)-ds12(1,1))/200:ds12(end,1);
-                % cfit objects will be 'fevaluated' automatically
-                ds1fit=ds1f(fitx);
-                ds2fit=ds2f(fitx);
-                ds12fit=ds12f(fitx);
-
-                % colors & symbols: there are as many groups of data as there are
-                % levels of the second factor in plotColumnIx, so use these
-                % levels' color specs
-                plotColumnIx=masterAnFacColIx;
-                pCol1=idv(plotColumnIx(2)).pCol{idv(plotColumnIx(2)).statsVal(1)};
-                pSymb1=idv(plotColumnIx(2)).pSymb{idv(plotColumnIx(2)).statsVal(1)};
-                pCol2=idv(plotColumnIx(2)).pCol{idv(plotColumnIx(2)).statsVal(2)};
-                pSymb2=idv(plotColumnIx(2)).pSymb{idv(plotColumnIx(2)).statsVal(2)};
-
-                % working style plots
-                figure, hold on
-                % first
-                ph=plot(ds1(:,1),ds1(:,2),pSymb1);
-                set(ph,'color',pCol1);
-                ph=plot(fitx,ds1fit,'-');
-                set(ph,'color',pCol1);
-                % second
-                ph=plot(ds2(:,1),ds2(:,2),pSymb2);
-                set(ph,'color',pCol2);
-                ph=plot(fitx,ds2fit,'-');
-                set(ph,'color',pCol2);
-                % combo fit in black
-                plot(fitx,ds12fit,'k-');
-                nicexyax;
-                set(gca,'color','m');
-                % --- part 5: F-test
-                % statistical test for similarity (order: wt crf, ko crf, combo crf)
-                [p,F,radj1,radj2]=curvecomp([ds1(ds1ix,:) ds1f(ds1(ds1ix,1))], ...
-                  [ds2(ds2ix,:) ds2f(ds2(ds2ix,1))],...
-                  [ds12(ds12ix,:) ds12f(ds12(ds12ix,1))],...
-                  length(ds1ix)-length(st_),length(ds2ix)-length(st_));
-                urtext(['p=' num2str(p,'%1.3f')],.85,'fontsize',12);
-                if p<.05
-                  disp(['***** H0 (identity of depth-response profiles) rejected, p= ' num2str(p)]);
-                  %       if p<.01, urtext('**',.9,'fontsize',20);
-                  %       else urtext('*',.9,'fontsize',20);
-                  %       end
-                else
-                  disp(['H0 (identity of depth-response profiles) not rejected, p= ' num2str(p)]);
-                  %       urtext('n.s.');
-                end
-                % information on goodness of fit
-                ultext(['R_{adj}(1):' num2str(radj1,3) '; R_{adj}(2):' num2str(radj2,3)]);
-                ds1f
-                ds2f
-                ds12f
-                [radj1 radj2]
-                % focus back on main plotting fig
+%                 % --- part 4: create curves representing the fits & plot
+%                 % 1. all data pts & fit
+%                 fitx=ds12(1,1):(ds12(end,1)-ds12(1,1))/200:ds12(end,1);
+%                 % cfit objects will be 'fevaluated' automatically
+%                 ds1fit=ds1f(fitx);
+%                 ds2fit=ds2f(fitx);
+%                 ds12fit=ds12f(fitx);
+% 
+%                 % colors & symbols: there are as many groups of data as there are
+%                 % levels of the second factor in plotColumnIx, so use these
+%                 % levels' color specs
+%                 plotColumnIx=masterAnFacColIx;
+%                 pCol1=idv(plotColumnIx(2)).pCol{idv(plotColumnIx(2)).statsVal(1)};
+%                 pSymb1=idv(plotColumnIx(2)).pSymb{idv(plotColumnIx(2)).statsVal(1)};
+%                 pCol2=idv(plotColumnIx(2)).pCol{idv(plotColumnIx(2)).statsVal(2)};
+%                 pSymb2=idv(plotColumnIx(2)).pSymb{idv(plotColumnIx(2)).statsVal(2)};
+% 
+%                 % working style plots
+%                 figure, hold on
+%                 % first
+%                 ph=plot(ds1(:,1),ds1(:,2),pSymb1);
+%                 set(ph,'color',pCol1);
+%                 ph=plot(fitx,ds1fit,'-');
+%                 set(ph,'color',pCol1);
+%                 % second
+%                 ph=plot(ds2(:,1),ds2(:,2),pSymb2);
+%                 set(ph,'color',pCol2);
+%                 ph=plot(fitx,ds2fit,'-');
+%                 set(ph,'color',pCol2);
+%                 % combo fit in black
+%                 plot(fitx,ds12fit,'k-');
+%                 nicexyax;
+%                 set(gca,'color','m');
+%                 % --- part 5: F-test
+%                 % statistical test for similarity (order: wt crf, ko crf, combo crf)
+%                 [p,F,radj1,radj2]=curvecomp([ds1(ds1ix,:) ds1f(ds1(ds1ix,1))], ...
+%                   [ds2(ds2ix,:) ds2f(ds2(ds2ix,1))],...
+%                   [ds12(ds12ix,:) ds12f(ds12(ds12ix,1))],...
+%                   length(ds1ix)-length(st_),length(ds2ix)-length(st_));
+%                 urtext(['p=' num2str(p,'%1.3f')],.85,'fontsize',12);
+%                 if p<.05
+%                   disp(['***** H0 (identity of depth-response profiles) rejected, p= ' num2str(p)]);
+%                   %       if p<.01, urtext('**',.9,'fontsize',20);
+%                   %       else urtext('*',.9,'fontsize',20);
+%                   %       end
+%                 else
+%                   disp(['H0 (identity of depth-response profiles) not rejected, p= ' num2str(p)]);
+%                   %       urtext('n.s.');
+%                 end
+%                 % information on goodness of fit
+%                 ultext(['R_{adj}(1):' num2str(radj1,3) '; R_{adj}(2):' num2str(radj2,3)]);
+%                 ds1f
+%                 ds2f
+%                 ds12f
+%                 [radj1 radj2]
+%                 % focus back on main plotting fig
                 if exist('fh','var')
                   figure(fh);
                 end
@@ -641,7 +656,7 @@ for rvi=rvix
                 set(ph,'facecolor',[.6 .6 .6]);
               case 3
                 [axh,ph,lh]=errbarhh(x,rdMn(:,:,1),rdMn(:,:,2),rdEBar(:,:,1),rdEBar(:,:,2),...
-                  'pos',compAxisPos(g,:));
+                  'pos',compAxisPos(g,:), 'invBarGroupOrd', 1);
                 % colors of bars: there are as many groups of bars as there are
                 % levels of the second factor in plotColumnIx, so use these
                 % levels' color specs
@@ -652,17 +667,17 @@ for rvi=rvix
                   idv(plotColumnIx(2)).pCol{idv(plotColumnIx(2)).statsVal(2)},...
                   'barwidth',1.0);
                 set(axh(:),'ytick',[],'XAxisLocation','top');
-                if 0
-                  if g==1,
-                    legend(ph(:,1),idv(plotColumnIx(end-1)).level(idv(plotColumnIx(end-1)).statsVal),...
+                if g==1 && doLegend
+                  legend(ph(:,1),idv(plotColumnIx(end-1)).level(idv(plotColumnIx(end-1)).statsVal),...
                       'location','SouthOutside');
-                  end
-                end
+               end
             end % if strcmp(plotStyle,'barhh')
           end % switch nMasterAnFacColIx
           % title, labels
-          set(get(axh(1),'title'),'string',...
-            [idv(masterSepFacColIx).level{idv(masterSepFacColIx).separateVal(g)} ', ' rv{rvi}]);
+          if ~isempty(masterSepFacColIx)
+              set(get(axh(1),'title'),'string',...
+                  [idv(masterSepFacColIx).level{idv(masterSepFacColIx).separateVal(g)} ', ' rv{rvi}]);
+          end
           set(get(axh(1),'xlabel'),'string',...
             idv(plotColumnIx(end)).level{idv(plotColumnIx(end)).statsVal(1)});
           set(get(axh(2),'xlabel'),'string',...
@@ -899,3 +914,15 @@ subpax(gcf);
 axh=[ax1 ax2];
 ph=[ph1 ph2];
 lh=cat(3,lh1,lh2);
+
+
+function [fitPar, stats] = fitnlm_e(x, y, funH, beta, options)
+% wrapper for fitnlm with specific outputs
+if ~isempty(options)
+    mdl = fitnlm(x, y, funH, beta, 'Options', options);
+else
+    mdl = fitnlm(x, y, funH, beta);
+end
+fitPar = mdl.Coefficients.Estimate;
+stats = mdl.Rsquared.Adjusted;
+    

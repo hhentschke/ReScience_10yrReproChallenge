@@ -451,7 +451,7 @@ for rvi=rvix
         mds1=[R.ue{loopi,rvi,1} R.ga{loopi,rvi,1}(:,1:2,1)];
         mds2=[R.ue{loopi,rvi,1} R.ga{loopi,rvi,1}(:,1:2,2)];
         titl=['wt, comprsn drug, ' behav{loopi} ', ' rv{rvi} ', ' q];
-        fnp=[behav{loopi} '_' rv{rvi} '_' q]
+        fnp=[behav{loopi} '_' rv{rvi} '_' q];
         compareFactor(2).level=dr;
     end
     % restrict depth range
@@ -464,7 +464,7 @@ for rvi=rvix
     % --- part 2: depending on parameter transform data and set up model
     [funH, fitParNames, beta, ds1ix, ds2ix, ds12ix]=fit2rmousepar(ds1, ds2, ds12, rv{rvi});
     
-    % --- part 3: fit and determine quality of fit for wt and ko
+    % --- part 3: fit and determine quality of fit 
     [fitPar1, stats1] = fitnlm_e(ds1(ds1ix,1), ds1(ds1ix,2), funH, beta, options);
     [fitPar2, stats2] = fitnlm_e(ds2(ds2ix,1), ds2(ds2ix,2), funH, beta, options);
     [fitPar12, stats12] = fitnlm_e(ds12(ds12ix,1), ds12(ds12ix,2), funH, beta, options);

@@ -308,6 +308,6 @@ Rraw=rmfield(Rraw,{'ga','ueix'});
 for rvi=1:length(rv)
   rv{rvi}=[rv{rvi} '_' rType{rvi}];
 end
-% save(rfn,'R','Rraw','ANPAR','DSET','RInfo','rv');
-save(rfn,'Rraw','ANPAR','DSET','RInfo','rv');
+save(rfn,'R','Rraw','ANPAR','DSET','RInfo','rv');
+
 
