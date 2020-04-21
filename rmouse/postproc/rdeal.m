@@ -490,83 +490,74 @@ for rvi=rvix
                 % --- part 2: depending on parameter transform data and set up model
                 tmpRv=rv{rvi}(1:strfind(rv{rvi},'_')-1);
                 
-                % [ft_,fo_,st_,ds1ix,ds2ix,ds12ix]=curvefit2rmousepar(ds1,ds2,ds12,tmpRv);
                 [funH, fitParNames, beta, ds1ix, ds2ix, ds12ix]=fit2rmousepar(ds1, ds2, ds12, tmpRv);
 
                 % --- part 3: fit and put in fitArr
-                %                 set(fo_,'Startpoint',st_);
-                %                 [ds1f,gof1]=fit(ds1(ds1ix,1),ds1(ds1ix,2),ft_ ,fo_);
-                %                 [ds2f,gof2]=fit(ds2(ds2ix,1),ds2(ds2ix,2),ft_ ,fo_);
-                %                 [ds12f,gof12]=fit(ds12(ds12ix,1),ds12(ds12ix,2),ft_ ,fo_);
-
-                
                 [fitPar1, stats1] = fitnlm_e(ds1(ds1ix,1), ds1(ds1ix,2), funH, beta, options);
                 [fitPar2, stats2] = fitnlm_e(ds2(ds2ix,1), ds2(ds2ix,2), funH, beta, options);
                 [fitPar12, stats12] = fitnlm_e(ds12(ds12ix,1), ds12(ds12ix,2), funH, beta, options);
                 
+                ds1f = @(x) funH(fitPar1, x);
+                ds2f = @(x) funH(fitPar2, x);
+                ds12f = @(x) funH(fitPar12, x);                
                 
                 % fill columns
-                %                 fitArr(nsi,1)={ds1f};
-                %                 fitArr(nsi,2)={ds2f};
-                fitArr(nsi,1)={@(x) funH(fitPar1, x)};
-                fitArr(nsi,2)={@(x) funH(fitPar2, x)};
+                fitArr(nsi,1)={ds1f};
+                fitArr(nsi,2)={ds2f};
 
-%                 % --- part 4: create curves representing the fits & plot
-%                 % 1. all data pts & fit
-%                 fitx=ds12(1,1):(ds12(end,1)-ds12(1,1))/200:ds12(end,1);
-%                 % cfit objects will be 'fevaluated' automatically
-%                 ds1fit=ds1f(fitx);
-%                 ds2fit=ds2f(fitx);
-%                 ds12fit=ds12f(fitx);
-% 
-%                 % colors & symbols: there are as many groups of data as there are
-%                 % levels of the second factor in plotColumnIx, so use these
-%                 % levels' color specs
-%                 plotColumnIx=masterAnFacColIx;
-%                 pCol1=idv(plotColumnIx(2)).pCol{idv(plotColumnIx(2)).statsVal(1)};
-%                 pSymb1=idv(plotColumnIx(2)).pSymb{idv(plotColumnIx(2)).statsVal(1)};
-%                 pCol2=idv(plotColumnIx(2)).pCol{idv(plotColumnIx(2)).statsVal(2)};
-%                 pSymb2=idv(plotColumnIx(2)).pSymb{idv(plotColumnIx(2)).statsVal(2)};
-% 
-%                 % working style plots
-%                 figure, hold on
-%                 % first
-%                 ph=plot(ds1(:,1),ds1(:,2),pSymb1);
-%                 set(ph,'color',pCol1);
-%                 ph=plot(fitx,ds1fit,'-');
-%                 set(ph,'color',pCol1);
-%                 % second
-%                 ph=plot(ds2(:,1),ds2(:,2),pSymb2);
-%                 set(ph,'color',pCol2);
-%                 ph=plot(fitx,ds2fit,'-');
-%                 set(ph,'color',pCol2);
-%                 % combo fit in black
-%                 plot(fitx,ds12fit,'k-');
-%                 nicexyax;
-%                 set(gca,'color','m');
-%                 % --- part 5: F-test
-%                 % statistical test for similarity (order: wt crf, ko crf, combo crf)
-%                 [p,F,radj1,radj2]=curvecomp([ds1(ds1ix,:) ds1f(ds1(ds1ix,1))], ...
-%                   [ds2(ds2ix,:) ds2f(ds2(ds2ix,1))],...
-%                   [ds12(ds12ix,:) ds12f(ds12(ds12ix,1))],...
-%                   length(ds1ix)-length(st_),length(ds2ix)-length(st_));
-%                 urtext(['p=' num2str(p,'%1.3f')],.85,'fontsize',12);
-%                 if p<.05
-%                   disp(['***** H0 (identity of depth-response profiles) rejected, p= ' num2str(p)]);
-%                   %       if p<.01, urtext('**',.9,'fontsize',20);
-%                   %       else urtext('*',.9,'fontsize',20);
-%                   %       end
-%                 else
-%                   disp(['H0 (identity of depth-response profiles) not rejected, p= ' num2str(p)]);
-%                   %       urtext('n.s.');
-%                 end
-%                 % information on goodness of fit
-%                 ultext(['R_{adj}(1):' num2str(radj1,3) '; R_{adj}(2):' num2str(radj2,3)]);
-%                 ds1f
-%                 ds2f
-%                 ds12f
-%                 [radj1 radj2]
-%                 % focus back on main plotting fig
+                % --- part 4: create curves representing the fits & plot
+                % 1. all data pts & fit
+                fitx=ds12(1,1):(ds12(end,1)-ds12(1,1))/200:ds12(end,1);
+                
+                ds1fit = funH(fitPar1, fitx);
+                ds2fit = funH(fitPar2, fitx);
+                ds12fit = funH(fitPar12, fitx);
+
+                % colors & symbols: there are as many groups of data as there are
+                % levels of the second factor in plotColumnIx, so use these
+                % levels' color specs
+                plotColumnIx=masterAnFacColIx;
+                pCol1=idv(plotColumnIx(2)).pCol{idv(plotColumnIx(2)).statsVal(1)};
+                pSymb1=idv(plotColumnIx(2)).pSymb{idv(plotColumnIx(2)).statsVal(1)};
+                pCol2=idv(plotColumnIx(2)).pCol{idv(plotColumnIx(2)).statsVal(2)};
+                pSymb2=idv(plotColumnIx(2)).pSymb{idv(plotColumnIx(2)).statsVal(2)};
+
+                % working style plots
+                figure, hold on
+                % first
+                ph=plot(ds1(:,1),ds1(:,2),pSymb1);
+                set(ph,'color',pCol1);
+                ph=plot(fitx,ds1fit,'-');
+                set(ph,'color',pCol1);
+                % second
+                ph=plot(ds2(:,1),ds2(:,2),pSymb2);
+                set(ph,'color',pCol2);
+                ph=plot(fitx,ds2fit,'-');
+                set(ph,'color',pCol2);
+                % combo fit in black
+                plot(fitx,ds12fit,'k-');
+                nicexyax;
+                set(gca,'color','m');
+                % --- part 5: F-test
+                % statistical test for similarity (order: wt crf, ko crf, combo crf)
+                [p,F,radj1,radj2]=curvecomp([ds1(ds1ix,:) ds1f(ds1(ds1ix,1))], ...
+                  [ds2(ds2ix,:) ds2f(ds2(ds2ix,1))],...
+                  [ds12(ds12ix,:) ds12f(ds12(ds12ix,1))],...
+                  length(ds1ix)-length(fitPar1),length(ds2ix)-length(fitPar1));
+                urtext(['p=' num2str(p,'%1.3f')],.85,'fontsize',12);
+                if p<.05
+                  disp(['***** H0 (identity of depth-response profiles) rejected, p= ' num2str(p)]);
+                  %       if p<.01, urtext('**',.9,'fontsize',20);
+                  %       else urtext('*',.9,'fontsize',20);
+                  %       end
+                else
+                  disp(['H0 (identity of depth-response profiles) not rejected, p= ' num2str(p)]);
+                  %       urtext('n.s.');
+                end
+                % information on goodness of fit
+                ultext(['R_{adj}(1):' num2str(radj1,3) '; R_{adj}(2):' num2str(radj2,3)]);
+                [radj1 radj2]
+                % focus back on main plotting fig
                 if exist('fh','var')
                   figure(fh);
                 end

@@ -115,10 +115,7 @@ for i=1:length(r)
       cccEnvZScore=cccPosPeakDecay;
       cccEnvZTestP=cccPosPeakDecay;
     end
-    % intermediate results var: for each channel, CC of individual segments in columns
-    segCC=repmat(nan,[2*AP.ccLagPts+1 r(i).ni]);
-    % same for envelope
-    segEnvCC=segCC;
+    segCC=nan([2*AP.ccLagPts+1 r(i).ni]);
     % intermediate: cell arrays holding peaks of current channel;
     % 2D (no shuffling) or 3D; 1st row positive-going peaks, second row
     % negative-going
@@ -148,7 +145,7 @@ for i=1:length(r)
       % intermediate results var: CC between theta and a) ONE segment of gamma 
       % envelope (in 1st column) and b) phase-shuffled versions of it (2nd and up
       % columns)
-      sh_segCC=repmat(nan,[2*AP.ccLagPts+1 1 AP.ccNShuffle+1]);
+      sh_segCC=nan([2*AP.ccLagPts+1 1 AP.ccNShuffle+1]);
       % assess size taken up by variables:
       tmpVarSz=...
         2*2*(2*AP.ccNShuffle+1)*tmpsz+...    % tmpR (shuffling, 2*AP.ccNShuffle because more peaks expected in shuffled data) 
@@ -205,7 +202,7 @@ for i=1:length(r)
             % segment's amplitude
             tmp8=sortrows([tmp_shEnv(:,ii) [1:AP.ppSeg]'],1);
             tmp_shEnv(tmp8(:,2),ii)=tmp_sortAmp;
-            sh_segCC(:,1,ii+1)=xxcorr(tmpd1_exc,detrend(tmp_shEnv(:,ii),'constant'),AP.ccLagPts,AP.ccScaleOpt);                
+            sh_segCC(:,1,ii+1)=xxcorr(tmpd1_exc,detrend(tmp_shEnv(:,ii),'constant'),AP.ccLagPts,AP.ccScaleOpt);
           end
           % put 'real' CC as first column
           sh_segCC(:,1,1)=segCC(:,k);
@@ -226,7 +223,7 @@ for i=1:length(r)
           tmpEnvPeakT(1,k,:)=permute(tmpR.posPeakT,[1 3 2]);
         end   % if:shuffle  
       end % for:segments
-      
+
       % ---------- in case no shuffling was requested we have to do here
       % what has been done for the shuffled and real data above, namely pull
       % the peaks

@@ -544,4 +544,5 @@ end % switch
 
 function sorry(rv)
 error(['Sorry, code for results variable ' rv ...
-    ' needs to be converted for usage without the Curve Fitting Toolbox'])
+    ' needs to be converted for usage without the Curve Fitting Toolbox.' ...
+    ' See example in case ''thgaeCCPeakMn''.'])
