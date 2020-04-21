@@ -1,6 +1,3 @@
-*.zip
-*.mat
-
 *.aux
 *.idx
 *.log
@@ -12,4 +9,3 @@
 *.run.xml
 *.out
 
-__pycache__/
