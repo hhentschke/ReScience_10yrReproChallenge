@@ -1,7 +1,3 @@
-% all wt, including baseline recordings from atropine experiments 
-% but excluding atropine recordings 
-% ** note there is an overlap with doall_wtAtropineCtrlRedundant **
-
 global WP DS AP
 % learn data root path from rmouse ini routine - has to be pulled into
 % separate variable because WP is set to [] with rmouse
@@ -11,7 +7,6 @@ dataRootPath = WP.rootPath;
 % script root path 
 script_root_path = "d:\hh\projects_programming\ten-years\ReScience_10yrReproChallenge\scripts_data";
 
-tic
 %% ----------------------- wt0001_04708 ------------------------------
 expName = "wt0001_04708";
 cd(fullfile(dataRootPath, 'beta3_wtko', expName));
@@ -123,5 +118,3 @@ rmouse;
 % load(['streams\' DS.abfFn '_diff_d_fpspike_res.mat']);
 % rmouse('af_tsl_ext',evt.tsl{1});
 % % clear; close all
-
-toc

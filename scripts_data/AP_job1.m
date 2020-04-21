@@ -81,4 +81,4 @@ AP.printas=                  [];
 % computing the CC between theta and phase-shuffled versions of the gamma envelope.
 % The parameter below specifies on how many shuffled versions of gammaEnv this
 % evaluation should be based. Set to zero to skip shuffling.
-AP.ccNShuffle=                  100;   
+AP.ccNShuffle=                  100;
