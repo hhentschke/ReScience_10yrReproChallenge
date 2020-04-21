@@ -1,0 +1,6 @@
+# rmouse - analysis of multi-electrode field potential data from rodent hippocampus 
+
+rmouse is a collection of Matlab routines for time-and frequency domain analysis of multi-channel local field potential (LFP) data from rodent hippocampus, with a focus on phase-amplitude coupling of theta with gamma rhythms. The code has been developed by Harald Hentschke in the laboratory of Robert A. Pearce during a postdoctoral stay (University of Wisconsin at Madison, 2003-2005). The core analysis strategy was devised by Matthew I. Banks (UW Madison). 
+
+The code was resurrected in April 2020 for the Ten Years Reproducibility Challenge (https://github.com/ReScience/ten-years). It has been restructured and cleaned up to a minor degree, and basic functionality with Matlab R2020a has been verfied. For details, see the manual, the original paper (Hentschke, H., Perkins, M.G., Pearce, R.A., & Banks, M.I. (2007) Muscarinic blockade weakens interaction of gamma with theta rhythms in mouse hippocampus. Eur.J.Neurosci., 26, 1642–1656.
+) and the ReScience paper (Hentschke 2020, in preparation).
