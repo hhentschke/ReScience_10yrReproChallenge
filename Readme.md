@@ -1,5 +1,7 @@
 # Reproduction of phase-amplitude coupling analysis of multi-electrode field potential data from rodent hippocampus
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4021389.svg)](https://doi.org/10.5281/zenodo.4021389)
+
 This is a contribution to the ["Ten Years Reproducibility Challenge"]( https://github.com/ReScience/ten-years ) run by [ReScience C](https://rescience.github.io/ ).
 
 Original article: Hentschke, H., Perkins, M.G., Pearce, R.A., & Banks, M.I. (2007) Muscarinic blockade weakens interaction of gamma with theta rhythms in mouse hippocampus. Eur.J.Neurosci., 26, 1642–1656.
