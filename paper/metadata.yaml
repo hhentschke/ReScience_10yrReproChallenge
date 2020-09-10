@@ -10,7 +10,7 @@ title: "[Re] Hippocampal Phase-Amplitude Coupling unearthed again"
 # List of authors with name, orcid number, email and affiliation
 # Affiliation "*" means contact author (required even for single-authored papers)
 authors:
-    
+
   - name: Harald Hentschke
     orcid: 0000-0003-0930-1603
     email: hhntschk@gmail.com
@@ -34,7 +34,7 @@ keywords: rescience c, Matlab, hippocampus, cross-frequency coupling, phase-ampl
 code:
   - url: https://github.com/hhentschke/ReScience_10yrReproChallenge/tree/v.1.0.0
   - doi: 10.5281/zenodo.4021389
-  - swh: 
+  - swh:
 
 # Data URL and DOI (optional if no data)
 data:
@@ -49,12 +49,12 @@ replication:
  - doi:  10.1111/j.1460-9568.2007.05779.x
 
 # Don't forget to surround abstract with double quotes
-abstract: "This is the description of a partly successful replication of a study of electrophysiological brain signals 
+abstract: "This is the description of a partly successful replication of a study of electrophysiological brain signals
 implemented 15 years ago in Matlab, motivated by ReScience's Ten Years Reproducibility Challenge. In the original study, the phenomenon of phase-amplitude coupling (PAC) was investigated in the hippocampus, a brain structure pivotal for navigation and the formation of memory."
 
 # Bibliography file (yours)
 bibliography: bibliography.bib
-  
+
 # Type of the article
 # Type can be:
 #  * Editorial
@@ -69,12 +69,12 @@ domain: Neuroscience
 # Coding language (main one only if several)
 language: Matlab
 
-  
+
 # To be filled by the author(s) after acceptance
 # -----------------------------------------------------------------------------
 
 # For example, the URL of the GitHub issue where review actually occured
-review: 
+review:
   - url: https://github.com/ReScience/submissions/issues/30
 
 contributors:
@@ -82,7 +82,7 @@ contributors:
     orcid: 0000-0002-1891-0972
     role: editor
   - name: Tom Donoghue
-    orcid:
+    orcid: 0000-0001-5911-0472
     role: reviewer
   - name:
     orcid:
@@ -92,13 +92,13 @@ contributors:
 dates:
   - received:  April 21, 2020
   - accepted: September 9, 2020
-  - published: September 9, 2020
+  - published: September 10, 2020
 
 # This information will be provided by the editor
 article:
-  - number: # Article number will be automatically assigned during publication
-  - doi:    # DOI from Zenodo
-  - url:    # Final PDF URL (Zenodo or rescience website?)
+  - number: 3 # Article number will be automatically assigned during publication
+  - doi:  10.5281/zenodo.4022361  # DOI from Zenodo
+  - url: https://zenodo.org/record/4022361/files/article.pdf   # Final PDF URL (Zenodo or rescience website?)
 
 # This information will be provided by the editor
 journal:
